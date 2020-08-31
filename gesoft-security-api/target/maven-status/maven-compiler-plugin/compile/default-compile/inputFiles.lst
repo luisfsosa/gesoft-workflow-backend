@@ -1,0 +1,6 @@
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-security-api/src/main/java/cl/com/gesoft/security/api/AuthenticationContext.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-security-api/src/main/java/cl/com/gesoft/security/api/GesoftACLException.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-security-api/src/main/java/cl/com/gesoft/security/api/AuthenticationException.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-security-api/src/main/java/cl/com/gesoft/security/api/GesoftAcl.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-security-api/src/main/java/cl/com/gesoft/security/api/GesoftAclService.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-security-api/src/main/java/cl/com/gesoft/security/api/GesoftAclParam.java

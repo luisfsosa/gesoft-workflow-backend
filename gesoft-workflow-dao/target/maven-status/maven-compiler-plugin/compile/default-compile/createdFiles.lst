@@ -1,0 +1,8 @@
+cl/com/gesoft/workflow/dao/WorkflowDAOSvc.class
+cl/com/gesoft/workflow/dao/hibernate/CustomPostgreSqlDialect.class
+cl/com/gesoft/workflow/dao/UserRepository.class
+cl/com/gesoft/workflow/dao/RolPermissionRepository.class
+cl/com/gesoft/workflow/dao/WorkflowDAOSvcImpl$1.class
+cl/com/gesoft/workflow/dao/WorkflowDAOSvcImpl.class
+cl/com/gesoft/workflow/dao/events/CreateSesionCallback.class
+cl/com/gesoft/workflow/dao/events/SaveSesionCallback.class

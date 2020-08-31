@@ -1,0 +1,7 @@
+cl/com/gesoft/workflow/model/ProjectModelIdAndClientId.class
+cl/com/gesoft/workflow/model/UserGroupRol.class
+cl/com/gesoft/workflow/model/hibernate/JsonDataUserType.class
+cl/com/gesoft/workflow/model/RolPermission.class
+cl/com/gesoft/workflow/model/User.class
+cl/com/gesoft/workflow/model/ProjectModel.class
+cl/com/gesoft/workflow/model/Session.class

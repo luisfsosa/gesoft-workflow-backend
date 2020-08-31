@@ -1,0 +1,6 @@
+cl/com/gesoft/workflow/base/HttpHelper.class
+cl/com/gesoft/workflow/base/MailHelper$Mail.class
+cl/com/gesoft/workflow/base/MailHelper$MailBuilder.class
+cl/com/gesoft/workflow/base/exception/GesoftProjectException.class
+cl/com/gesoft/workflow/base/MailHelper.class
+cl/com/gesoft/workflow/base/exception/GesoftProjectWarningException.class

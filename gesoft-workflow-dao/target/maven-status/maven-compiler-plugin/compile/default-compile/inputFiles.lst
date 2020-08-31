@@ -1,0 +1,8 @@
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/WorkflowDAOSvcImpl.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/hibernate/CustomPostgreSqlDialect.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/WorkflowDAOSvc.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/UserRepository.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/events/CreateSesionCallback.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/events/SaveSesionCallback.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/RolPermissionRepository.java
+/home/geovanni/Documentos/backend/java/gesoft-workflow-backend/gesoft-workflow-dao/src/main/java/cl/com/gesoft/workflow/dao/package-info.java
