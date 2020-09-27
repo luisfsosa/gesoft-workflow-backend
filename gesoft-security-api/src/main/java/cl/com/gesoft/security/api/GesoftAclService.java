@@ -9,7 +9,7 @@ package cl.com.gesoft.security.api;
 import java.util.Map;
 
 /**
- * The interface Quo acl service.
+ * The interface Gesoft acl service.
  *
  * @autor Luis Felipe Sosa Alvarez luisfsosa@gmail.com
  */

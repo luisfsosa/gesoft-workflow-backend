@@ -51,7 +51,7 @@ public class WorkflowAuthManagerImpl implements WorkflowAuthManager {
 
             authResponse.setUserId(user.getId().toString());
             authResponse.setClientId(user.getClientId());
-            // authResponse.setStatus(user.getActivated();
+            authResponse.setRol(user.getRol());
             authResponse.setCreationDate(new Date(now));
             authResponse.setExpirationDate(new Date(now + EXPIRATIONTIME));
 
@@ -59,7 +59,7 @@ public class WorkflowAuthManagerImpl implements WorkflowAuthManager {
 
             String jwt = Jwts.builder().setClaims(aplicaciones).setSubject(user.getId().toString())
                     .setExpiration(authResponse.getExpirationDate())
-                    .setHeaderParam("sessionId", authResponse.getSessionId()).setHeaderParam("username", username)
+                    .setHeaderParam("sessionId", authResponse.getSessionId()).setHeaderParam("username", username).setHeaderParam("rol", user.getRol())
                     .setHeaderParam("status", authResponse.getStatus()).setHeaderParam("clientId", user.getClientId())
                     .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
             authResponse.setAuthKey(jwt);

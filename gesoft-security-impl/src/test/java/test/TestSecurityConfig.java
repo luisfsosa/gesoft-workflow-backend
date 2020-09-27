@@ -23,7 +23,7 @@ public class TestSecurityConfig {
     }
 
     @Bean
-    GesoftAclService createQuoAclService() {
+    GesoftAclService createGesoftAclService() {
         return new GesoftAclService() {
             @Override
             public boolean acl(String expression, Map<String, Object> params) {

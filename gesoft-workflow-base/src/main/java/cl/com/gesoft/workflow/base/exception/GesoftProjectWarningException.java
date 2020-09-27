@@ -16,7 +16,7 @@ public class GesoftProjectWarningException extends GesoftProjectException {
 
 
     /**
-     * Instantiates a new Quo work flow warning exception.
+     * Instantiates a new GESOFT work flow warning exception.
      *
      * @param summary the summary
      * @param detail  the detail

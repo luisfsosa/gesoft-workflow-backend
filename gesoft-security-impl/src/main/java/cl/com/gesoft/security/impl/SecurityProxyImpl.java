@@ -51,7 +51,7 @@ public class SecurityProxyImpl {
     AutowireCapableBeanFactory beanFactory;
 
     /**
-     * The Quo acl service.
+     * The Gesoft acl service.
      */
     @Autowired
     GesoftAclService gesoftAclService;

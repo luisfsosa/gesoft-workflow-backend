@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The interface Quo acl param.
+ * The interface Gesoft acl param.
  *
  * @autor Luis Felipe Sosa Alvarez luisfsosa@gmail.com
  */

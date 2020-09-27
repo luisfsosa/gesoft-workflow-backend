@@ -21,7 +21,7 @@ public class GesoftProjectException extends Exception {
     private String detail;
 
     /**
-     * Instantiates a new Quo work flow exception.
+     * Instantiates a new Gesoft work flow exception.
      *
      * @param summary the summary
      * @param detail  the detail
@@ -33,7 +33,7 @@ public class GesoftProjectException extends Exception {
     }
 
     /**
-     * Instantiates a new Quo work flow exception.
+     * Instantiates a new GESOFT work flow exception.
      *
      * @param summary the summary
      * @param detail  the detail

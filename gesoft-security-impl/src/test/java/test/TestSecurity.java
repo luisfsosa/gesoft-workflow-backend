@@ -27,8 +27,8 @@ public class TestSecurity {
     @Test
     public void testAnnotations() throws NoSuchMethodException {
         Method method = TestSecurity.class.getMethod("testAnnotations", new Class[]{});
-        final GesoftAcl quoACL = AnnotationUtils.findAnnotation(method, GesoftAcl.class);
-        System.out.println(quoACL);
+        final GesoftAcl gesoftAcl = AnnotationUtils.findAnnotation(method, GesoftAcl.class);
+        System.out.println(gesoftAcl);
     }
 
 

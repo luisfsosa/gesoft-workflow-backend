@@ -136,7 +136,7 @@ public class RestConfigurer extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * Process quo work flow warning exception map.
+     * Process Gesoft work flow warning exception map.
      *
      * @param request  the request
      * @param response the response
@@ -159,7 +159,7 @@ public class RestConfigurer extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * Process quo work flow exception map.
+     * Process Gesoft work flow exception map.
      *
      * @param response the response
      * @param e        the e

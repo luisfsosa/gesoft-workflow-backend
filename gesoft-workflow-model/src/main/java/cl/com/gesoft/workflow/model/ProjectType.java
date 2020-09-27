@@ -2,25 +2,29 @@
  * Copyright (c) 2020, Luis Felipe Sosa Alvarez. All rights reserved.
  * Use is subject to license terms.
  *
- * TEMPLATE-BACKEND-SPRING-BOOT
+ * GESOFT-WORKFLOW-BACKEND
  */
 package cl.com.gesoft.workflow.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The Class RolPermission.
+ * The Class ProjectType.
  *
  * @autor Luis Felipe Sosa Alvarez luisfsosa@gmail.com
  */
 @Entity
-@Table(name = "gwf_rol_permission")
-public class RolPermission implements Serializable, Cloneable {
+@Table(name = "gwf_project_type")
+public class ProjectType implements Serializable, Cloneable {
 
-    private static final long serialVersionUID = 3767847229388360061L;
+
+    private static final long serialVersionUID = -2063100163493295742L;
 
     /**
      * Gets serial version uid.
@@ -34,22 +38,26 @@ public class RolPermission implements Serializable, Cloneable {
     /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "rol", nullable = false)
-    @NotEmpty(message = "Rol is required")
-    private String rol;
+    @Column(name = "name", nullable = false)
+    @NotEmpty(message = "Name is required")
+    @Size(max = 80)
+    private String name;
 
-    @Column(name = "permission" ,nullable = false)
-    @NotEmpty(message = "Permission is required")
-    private String permission;
+    @Column(name = "duration" ,nullable = false)
+    @NotNull(message = "Duration is required")
+    @Positive
+    @Size(max = 2)
+    private Integer duration;
+
 
     /**
      * Gets the id.
      *
      * @return the id
      */
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -58,44 +66,45 @@ public class RolPermission implements Serializable, Cloneable {
      *
      * @param id the new id
      */
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * Gets rol.
+     * Gets the name.
      *
-     * @return the rol
+     * @return the name
      */
-    public String getRol() {
-        return rol;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets rol.
+     * Name.
      *
-     * @param rol the rol
+     * @param name the first name
+     * @return the group
      */
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * Gets permission.
+     * Gets duration.
      *
-     * @return the permission
+     * @return the duration
      */
-    public String getPermission() {
-        return permission;
+    public Integer getDuration() {
+        return duration;
     }
 
     /**
-     * Sets permission.
+     * Sets duration.
      *
-     * @param permission the permission
+     * @param duration the duration
      */
-    public void setPermission(String permission) {
-        this.permission = permission;
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     /**
@@ -109,10 +118,10 @@ public class RolPermission implements Serializable, Cloneable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof RolPermission)) {
+        if (!(o instanceof ProjectType)) {
             return false;
         }
-        return id != null && Objects.equals(getId(), ((RolPermission) o).getId());
+        return id != null && Objects.equals(getId(), ((ProjectType) o).getId());
     }
 
     /**
@@ -128,13 +137,13 @@ public class RolPermission implements Serializable, Cloneable {
     /**
      * To Clone.
      *
-     * @return the RolPermission
+     * @return the Group
      */
     @Override
-    public RolPermission clone() {
-        RolPermission clon = null;
+    public ProjectType clone() {
+        ProjectType clon = null;
         try {
-            clon = (RolPermission) super.clone();
+            clon = (ProjectType) super.clone();
         } catch (CloneNotSupportedException e) {
             System.out.println(" no se puede duplicar");
         }
@@ -148,10 +157,10 @@ public class RolPermission implements Serializable, Cloneable {
      */
     @Override
     public String toString() {
-        return "RolPermission{" +
+        return "ProjectType{" +
                 "id=" + getId() +
-                ", rol='" + getRol() + "'" +
-                ", permission='" + getPermission() + "'" +
+                ", name='" + getName() + "'" +
+                ", duration='" + getDuration() + "'" +
                 "}";
     }
 }

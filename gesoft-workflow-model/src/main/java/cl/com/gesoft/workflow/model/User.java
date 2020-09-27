@@ -220,7 +220,7 @@ public class User implements Serializable, Cloneable, ProjectModelIdAndClientId 
                 ", name='" + getName() + "'" +
                 ", email='" + getEmail() + "'" +
                 ", rol='" + getRol() + "'" +
-                ", clienteId='" + getClientId() + "'" +
+                ", clientId='" + getClientId() + "'" +
                 "}";
     }
 }

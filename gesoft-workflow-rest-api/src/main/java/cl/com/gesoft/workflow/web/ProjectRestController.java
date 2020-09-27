@@ -6,8 +6,13 @@
  */
 package cl.com.gesoft.workflow.web;
 
+import cl.com.gesoft.workflow.base.exception.GesoftProjectException;
 import cl.com.gesoft.workflow.dao.WorkflowDAOSvc;
 import cl.com.gesoft.workflow.dao.WorkflowDAOSvcImpl;
+import cl.com.gesoft.workflow.dao.dto.TemplateDTO;
+import cl.com.gesoft.workflow.model.Client;
+import cl.com.gesoft.workflow.model.ProjectType;
+import cl.com.gesoft.workflow.model.Template;
 import cl.com.gesoft.workflow.model.User;
 import cl.com.gesoft.workflow.security.WorkflowAuthManager;
 import cl.com.gesoft.workflow.security.WorkflowAuthManagerImpl;
@@ -217,7 +222,7 @@ public class ProjectRestController {
         Integer sessionId = (Integer) jws.getHeader().get("sessionId");
         String username = (String) jws.getHeader().get("username");
         String rol = (String) jws.getHeader().get("rol");
-        Integer clientId = (Integer) jws.getHeader().get("clienteId");
+        Integer clientId = (Integer) jws.getHeader().get("clientId");
         String userId = jws.getBody().getSubject();
 
         Claims claims = jws.getBody();
@@ -355,13 +360,13 @@ public class ProjectRestController {
 
 
     /**
-     * Create quo acl service quo acl service.
+     * Create GESOFT acl service GESOFT acl service.
      *
      * @param ProjectACLImpl the project acl
-     * @return the quo acl service
+     * @return the Gesoft acl service
      */
     @Bean
-    GesoftAclService createQuoAclService(@Autowired ProjectACLImpl ProjectACLImpl) {
+    GesoftAclService createGesoftAclService(@Autowired ProjectACLImpl ProjectACLImpl) {
         return new GesoftAclService() {
             @Override
             public boolean acl(String expression, Map<String, Object> params) {
@@ -408,7 +413,7 @@ public class ProjectRestController {
     }
 
     @Bean
-	WorkflowDAOSvc createQuoCrmDAOSvc() {
+	WorkflowDAOSvc createWorkflowDAOSvc() {
 		return new WorkflowDAOSvcImpl();
 	}
 
@@ -418,6 +423,10 @@ public class ProjectRestController {
 		return authManager;
 	}
 
+    @RequestMapping(method = RequestMethod.POST, value = "/login")
+    public @ResponseBody Object login(@RequestBody Map<String, String> requestBody) throws Exception {
+        return projectSvc.login(requestBody.get("username"), requestBody.get("password"));
+    }
 
     @PostMapping("/users")
     public List<User> findAllUsers(@RequestBody List<String> rolNames) throws Exception {
@@ -432,8 +441,110 @@ public class ProjectRestController {
         return new ArrayList<>();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/login")
-	public @ResponseBody Object login(@RequestBody Map<String, String> requestBody) throws Exception {
-		return projectSvc.login(requestBody.get("username"), requestBody.get("password"));
-	}
+    @GetMapping("/clients")
+    public List<Client> findAllClients() throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findAllClientsByClientId(user.getClientId());
+        }
+        return new ArrayList<>();
+    }
+
+    @PostMapping("/clients")
+    public Client createClient(@RequestBody Client client) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.createClient(user.getClientId(), client);
+        } else {
+            throw new GesoftProjectException("Clientes", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/clients/{workFlowClientId}")
+    public Client updateClient(@PathVariable Long workFlowClientId, @RequestBody Client client) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateClient(user.getClientId(), workFlowClientId, client);
+        } else {
+            throw new GesoftProjectException("Clientes", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/clients/{workFlowClientId}/state")
+    public Client updateClientState(@PathVariable Long workFlowClientId, @RequestBody Client client) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateClientState(user.getClientId(), workFlowClientId, client);
+        } else {
+            throw new GesoftProjectException("Clientes", "clientId es requerido");
+        }
+    }
+
+    @GetMapping("/project-types")
+    public List<ProjectType> findAllProjectTypes() throws Exception {
+        return projectSvc.findAllProjectTypes();
+    }
+
+
+    @GetMapping("/project-types/{projectTypeId}")
+    public ProjectType findProjectTypeById(@PathVariable Integer projectTypeId) throws Exception {
+        return projectSvc.findProjectTypeById(projectTypeId);
+    }
+
+    @GetMapping("/templates")
+    public List<TemplateDTO> findAllTemplates() throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findAllTemplatesByClientId(user.getClientId());
+        }
+        return new ArrayList<>();
+    }
+
+    @PostMapping("/templates")
+    public Template createTemplate(@RequestBody Template template) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.createTemplate(user.getClientId(), template);
+        } else {
+            throw new GesoftProjectException("Plantillas", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/templates/{templateId}")
+    public Template updateTemplate(@PathVariable Long templateId, @RequestBody Template template) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateTemplate(user.getClientId(), templateId, template);
+        } else {
+            throw new GesoftProjectException("Plantillas", "clientId es requerido");
+        }
+    }
 }
