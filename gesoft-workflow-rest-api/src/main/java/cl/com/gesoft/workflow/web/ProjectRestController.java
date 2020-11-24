@@ -9,11 +9,11 @@ package cl.com.gesoft.workflow.web;
 import cl.com.gesoft.workflow.base.exception.GesoftProjectException;
 import cl.com.gesoft.workflow.dao.WorkflowDAOSvc;
 import cl.com.gesoft.workflow.dao.WorkflowDAOSvcImpl;
+import cl.com.gesoft.workflow.dao.dto.ActivityDTO;
+import cl.com.gesoft.workflow.dao.dto.ProjectDTO;
+import cl.com.gesoft.workflow.dao.dto.ProjectExecutionDTO;
 import cl.com.gesoft.workflow.dao.dto.TemplateDTO;
-import cl.com.gesoft.workflow.model.Client;
-import cl.com.gesoft.workflow.model.ProjectType;
-import cl.com.gesoft.workflow.model.Template;
-import cl.com.gesoft.workflow.model.User;
+import cl.com.gesoft.workflow.model.*;
 import cl.com.gesoft.workflow.security.WorkflowAuthManager;
 import cl.com.gesoft.workflow.security.WorkflowAuthManagerImpl;
 import cl.com.gesoft.workflow.service.ProjectSvc;
@@ -29,6 +29,11 @@ import cl.com.gesoft.security.impl.SecurityProxyImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import net.kaczmarzyk.spring.data.jpa.domain.Equal;
+import net.kaczmarzyk.spring.data.jpa.domain.GreaterThan;
+import net.kaczmarzyk.spring.data.jpa.domain.In;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.apache.catalina.connector.Connector;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -45,12 +50,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -454,6 +463,32 @@ public class ProjectRestController {
         return new ArrayList<>();
     }
 
+    @GetMapping("/clients/active")
+    public List<Client> findAllActiveClients() throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findAllActiveClientsByClientId(user.getClientId());
+        }
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/clients/{workFlowClientId}")
+    public Client findClientById(@PathVariable Long workFlowClientId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findClientById(user.getClientId(), workFlowClientId);
+        }
+        return new Client();
+    }
+
     @PostMapping("/clients")
     public Client createClient(@RequestBody Client client) throws Exception {
 
@@ -507,6 +542,32 @@ public class ProjectRestController {
         return projectSvc.findProjectTypeById(projectTypeId);
     }
 
+    @GetMapping("/project-types/{projectTypeId}/templates")
+    public List<Template> findTemplateByClientIdAndProjectTypeId(@PathVariable Long projectTypeId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findTemplateByClientIdAndProjectTypeId(user.getClientId(), projectTypeId);
+        }
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/templates/{templateId}/activities")
+    public List<ActivityDTO> findActivityDTOByClientIdAndTemplateId(@PathVariable Long templateId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findActivityDTOByClientIdAndTemplateId(user.getClientId(), templateId);
+        }
+        return new ArrayList<>();
+    }
+
     @GetMapping("/templates")
     public List<TemplateDTO> findAllTemplates() throws Exception {
 
@@ -547,4 +608,372 @@ public class ProjectRestController {
             throw new GesoftProjectException("Plantillas", "clientId es requerido");
         }
     }
+
+    @GetMapping("/projects")
+    public List<ProjectDTO> findAllProjects() throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findAllProjectsByClientId(user.getClientId());
+        }
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/projects/{projectId}")
+    public Project findProjectById(@PathVariable Long projectId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findProjectById(user.getClientId(), projectId);
+        }
+        return new Project();
+    }
+
+
+    @GetMapping("/projects/{projectId}/activities")
+    public List<ActivityDTO> findActivityDTOByClientIdAndProjectId(@PathVariable Long projectId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findActivityDTOByClientIdAndProjectId(user.getClientId(), projectId);
+        }
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/projects/{projectId}/project-executions")
+    public List<ProjectExecution> findProjectExecutionsByProjectId(@PathVariable Long projectId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findProjectExecutionsByProjectId(user.getClientId(), projectId);
+        }
+        return new ArrayList<>();
+    }
+
+    @PostMapping("/projects")
+    public Project createProject(@RequestBody Project project) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.createProject(user.getClientId(), project);
+        } else {
+            throw new GesoftProjectException("Proyectos", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/projects/{projectId}")
+    public Project updateProject(@PathVariable Long projectId, @RequestBody Project project) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateProject(user.getClientId(), projectId, project);
+        } else {
+            throw new GesoftProjectException("Proyectos", "clientId es requerido");
+        }
+    }
+
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<?> deleteProject(@PathVariable Long projectId) throws Exception {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.deleteProject(user.getClientId(), projectId);
+        } else {
+            throw new GesoftProjectException("Proyectos", "clientId es requerido");
+        }
+    }
+
+    @GetMapping("/project-executions")
+    public List<ProjectExecutionDTO> findAllProjectsExecutions(
+            @RequestParam  Integer projectTypeId,
+            @RequestParam  Integer yearSince,
+            @RequestParam(required = false)  String periodSince) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findProjectDTOByClientIdAndProjectTypeIdAndYearSinceAndPeriodSince(user.getClientId(), projectTypeId,yearSince, periodSince );
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * Find all workflow views page.
+     *
+     * @param workFlowViewSpec the work flow view spec
+     * @param pageable         the pageable
+     * @return the page
+     * @throws Exception the exception
+     */
+    @GetMapping("/worflow-views")
+    public Page<WorkflowView> findAllWorkflowViews(@And({
+            @Spec(path = "id", spec = Equal.class),
+            @Spec(path = "year", spec = Equal.class),
+            @Spec(path = "period", spec = Equal.class),
+            @Spec(path = "templateId", spec = Equal.class),
+            @Spec(path = "projectTypeId", spec = Equal.class),
+            @Spec(path = "clientId", spec = Equal.class),
+            @Spec(path = "commentsNumber", spec = GreaterThan.class),
+            @Spec(path = "attachedNumber", spec = GreaterThan.class),
+            @Spec(path = "pendingNumber", spec = GreaterThan.class),
+            @Spec(path = "rejectedNumber", spec = GreaterThan.class),
+            @Spec(path = "activity1", spec = In.class),
+            @Spec(path = "activity2", spec = In.class),
+            @Spec(path = "activity3", spec = In.class),
+            @Spec(path = "activity4", spec = In.class),
+            @Spec(path = "activity5", spec = In.class),
+            @Spec(path = "activity6", spec = In.class),
+            @Spec(path = "activity7", spec = In.class),
+            @Spec(path = "activity8", spec = In.class),
+            @Spec(path = "activity9", spec = In.class),
+            @Spec(path = "activity10", spec = In.class),
+            @Spec(path = "activity11", spec = In.class),
+            @Spec(path = "activity12", spec = In.class),
+            @Spec(path = "activity13", spec = In.class),
+            @Spec(path = "activity14", spec = In.class),
+            @Spec(path = "activity15", spec = In.class),
+            @Spec(path = "status1", spec = In.class),
+            @Spec(path = "status2", spec = In.class),
+            @Spec(path = "status3", spec = In.class),
+            @Spec(path = "status4", spec = In.class),
+            @Spec(path = "status5", spec = In.class),
+            @Spec(path = "status6", spec = In.class),
+            @Spec(path = "status7", spec = In.class),
+            @Spec(path = "status8", spec = In.class),
+            @Spec(path = "status9", spec = In.class),
+            @Spec(path = "status10", spec = In.class),
+            @Spec(path = "status11", spec = In.class),
+            @Spec(path = "status12", spec = In.class),
+            @Spec(path = "status13", spec = In.class),
+            @Spec(path = "status14", spec = In.class),
+            @Spec(path = "status15", spec = In.class),
+            @Spec(path = "comment1", spec = In.class),
+            @Spec(path = "comment2", spec = In.class),
+            @Spec(path = "comment3", spec = In.class),
+            @Spec(path = "comment4", spec = In.class),
+            @Spec(path = "comment5", spec = In.class),
+            @Spec(path = "comment6", spec = In.class),
+            @Spec(path = "comment7", spec = In.class),
+            @Spec(path = "comment8", spec = In.class),
+            @Spec(path = "comment9", spec = In.class),
+            @Spec(path = "comment10", spec = In.class),
+            @Spec(path = "comment11", spec = In.class),
+            @Spec(path = "comment12", spec = In.class),
+            @Spec(path = "comment13", spec = In.class),
+            @Spec(path = "comment14", spec = In.class),
+            @Spec(path = "comment15", spec = In.class),
+            @Spec(path = "attached1", spec = In.class),
+            @Spec(path = "attached2", spec = In.class),
+            @Spec(path = "attached3", spec = In.class),
+            @Spec(path = "attached4", spec = In.class),
+            @Spec(path = "attached5", spec = In.class),
+            @Spec(path = "attached6", spec = In.class),
+            @Spec(path = "attached7", spec = In.class),
+            @Spec(path = "attached8", spec = In.class),
+            @Spec(path = "attached9", spec = In.class),
+            @Spec(path = "attached10", spec = In.class),
+            @Spec(path = "attached11", spec = In.class),
+            @Spec(path = "attached12", spec = In.class),
+            @Spec(path = "attached13", spec = In.class),
+            @Spec(path = "attached14", spec = In.class),
+            @Spec(path = "attached15", spec = In.class)
+    }) Specification<WorkflowView> workFlowViewSpec,
+                                                   Pageable pageable) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findAllWorkflowViews(user.getClientId(), workFlowViewSpec, pageable);
+        }
+        return null;
+    }
+
+    /*@GetMapping("/worflow-views/filters")
+    public WorkflowFilterNumbers findAllWorkflowFilterNumbers (
+            @RequestParam Integer projectTypeId,
+            @RequestParam Integer templateId,
+            @RequestParam Integer year,
+            @RequestParam (required = false) String period
+    ) throws Exception {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+
+            ProjectExecution projectExecution = new ProjectExecution();
+            projectExecution.setProjectTypeId(projectTypeId);
+            projectExecution.setTemplateId(templateId);
+            projectExecution.setYear(year);
+            projectExecution.setPeriod(period);
+            projectExecution.setClientId(user.getClientId());
+
+            return workflowSvc.findAllWorkflowFilterNumbers(projectExecution);
+        } else {
+            return new WorkflowFilterNumbers();
+        }
+    }*/
+
+    @GetMapping("/project-executions/{projectExecutionId}/activities")
+    public List<ActivityDTO> findActivityDTOByClientIdAndProjectExecutionId(@PathVariable Long projectExecutionId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findActivityDTOByClientIdAndProjectExecutionId(user.getClientId(), projectExecutionId);
+        }
+        return new ArrayList<>();
+    }
+
+    @PutMapping("/project-executions/{projectExecutionId}")
+    public ProjectExecution updateProjectExecution(@PathVariable Long projectExecutionId, @RequestBody ProjectExecution projectExecution) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateProjectExecution(user.getClientId(), projectExecutionId, projectExecution);
+        } else {
+            throw new GesoftProjectException("Ejecuciones Proyecto", "clientId es requerido");
+        }
+    }
+
+
+    @DeleteMapping("/project-executions/{projectExecutionId}")
+    public ResponseEntity<?> deleteProjectExecution(@PathVariable Long projectExecutionId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.deleteProjectExecution(user.getClientId(), projectExecutionId);
+        } else {
+            throw new GesoftProjectException("Ejecuciones Proyecto", "clientId es requerido");
+        }
+    }
+
+    @GetMapping("/activities/{activityId}")
+    public ActivityDTO findActivityDTOByClientIdAndActivityId(@PathVariable String activityId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findActivityDTOByClientIdAndActivityId(user.getClientId(), activityId);
+        }else {
+            throw new GesoftProjectException("Actividades", "clientId es requerido");
+        }
+    }
+
+    @GetMapping("/activity/{activityId}/comments")
+    public List<ActivityComment> findActivityCommentByClientIdAndActivityId(@PathVariable String activityId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findActivityCommentByClientIdAndActivityId(user.getClientId(), activityId);
+        }
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/activity/{activityId}/attachments")
+    public List<ActivityAttachment> findActivityAttachmentByClientIdAndActivityId(@PathVariable String activityId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.findActivityAttachmentByClientIdAndActivityId(user.getClientId(), activityId);
+        }
+        return new ArrayList<>();
+    }
+
+    @PutMapping("/activity/{activityId}/advance")
+    public Activity updateActivityAdvance(@PathVariable String activityId, @RequestBody Activity activity) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateActivityAdvance(user.getClientId(), user,  activityId, activity);
+        } else {
+            throw new GesoftProjectException("Actividades", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/activity/{activityId}/approve")
+    public Activity updateActivityApprove(@PathVariable String activityId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateActivityApprove(user.getClientId(), activityId);
+        } else {
+            throw new GesoftProjectException("Actividades", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/activity/{activityId}/reject")
+    public Activity updateActivityReject(@PathVariable String activityId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateActivityReject(user.getClientId(), activityId);
+        } else {
+            throw new GesoftProjectException("Actividades", "clientId es requerido");
+        }
+    }
+
+    @PutMapping("/activity/{activityId}/pending")
+    public Activity updateActivityPending(@PathVariable String activityId) throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            return projectSvc.updateActivityPending(user.getClientId(), activityId);
+        } else {
+            throw new GesoftProjectException("Actividades", "clientId es requerido");
+        }
+    }
+
 }
