@@ -31,10 +31,10 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
      * @return the list
      */
     @Query(
-            value=  "SELECT qwt.id, qwt.name, qwt.description, qwt.cutting_day as cuttingDay, qwpt.id as projectTypeId , qwpt.name as projectTypeName, qwt.is_order as orderTemplate " +
-                    "FROM qworkflow_template qwt " +
-                    "INNER JOIN qwf_project_type qwpt on qwt.project_type_id = qwpt.id " +
-                    "WHERE qwt.cliente_id = :clientId ",
+            value=  "SELECT gwt.id, gwt.name, gwt.description, gwt.cutting_day as cuttingDay, gwt.id as projectTypeId , gwt.name as projectTypeName, gwt.is_order as orderTemplate " +
+                    "FROM gwf_template gwt " +
+                    "INNER JOIN gwf_project_type gwpt on gwt.project_type_id = gwpt.id " +
+                    "WHERE gwt.cliente_id = :clientId ",
             nativeQuery = true
     )
     List<TemplateDTO> findTemplateDTOByClientId(Integer clientId);

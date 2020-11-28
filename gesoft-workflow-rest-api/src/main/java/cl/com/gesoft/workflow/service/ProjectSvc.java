@@ -70,7 +70,6 @@ public interface ProjectSvc {
     @Transactional(rollbackFor = GesoftProjectException.class)
     Client updateClientState(Integer clientId, Long workFlowClientId, Client client) throws GesoftProjectException;
 
-
     @GesoftAcl(expression = "#acl.hasPermission('OBTENER_TIPO_PROYECTO')")
     List<ProjectType> findAllProjectTypes() throws GesoftProjectException;
 

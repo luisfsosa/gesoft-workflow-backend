@@ -31,11 +31,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @return the list
      */
     @Query(
-            value=  "SELECT gwp.id, gwp.name, gwp.project_type_id as projectTypeId , gwpt.name as projectTypeName, gwp.gwf_client_id as gwfclientId, gwp.template_id as templateId, gwp.business_name as gwfClientName, gwp.user_id as userId, u.email as userName " +
+            value=  "SELECT gwp.id, gwp.name, gwp.project_type_id as projectTypeId , gwpt.name as projectTypeName, gwp.gwf_client_id as gwfclientId, gwp.template_id as templateId, gwc.business_name as gwfClientName, gwp.user_id as userId, u.email as userName " +
                     " FROM gwf_project gwp " +
                     " INNER JOIN gwf_project_type gwpt on gwp.project_type_id = gwpt.id " +
-                    " INNER JOIN usuarios u on qwp.user_id = u.id " +
-                    " INNER JOIN qwf_client gwc on gwp.workflow_client_id = gwc.id " +
+                    " INNER JOIN gwf_user u on gwp.user_id = u.id " +
+                    " INNER JOIN gwf_client gwc on gwp.gwf_client_id = gwc.id " +
                     " WHERE gwp.cliente_id = :clientId ",
             nativeQuery = true
     )

@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Entity
 @Immutable
-@Table(name = "qwf_vw_workflow")
+@Table(name = "gwf_vw_workflow")
 public class WorkflowView implements Serializable, Cloneable, WorflowModelIdAndClientId{
 
 

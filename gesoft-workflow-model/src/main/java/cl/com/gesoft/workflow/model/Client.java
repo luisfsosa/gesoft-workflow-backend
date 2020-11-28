@@ -51,7 +51,7 @@ public class Client implements Serializable, Cloneable, WorflowModelIdAndClientI
 
     @Column(name = "address")
     @Type(type = "AddressDataUserType")
-    private Address Address;
+    private Address address;
 
     @Column(name = "active", nullable = false)
     @NotNull(message = "Active Id is required")
@@ -108,7 +108,7 @@ public class Client implements Serializable, Cloneable, WorflowModelIdAndClientI
      * @return the address
      */
     public Address getAddress() {
-        return Address;
+        return address;
     }
 
     /**
@@ -117,7 +117,7 @@ public class Client implements Serializable, Cloneable, WorflowModelIdAndClientI
      * @param address the address
      */
     public void setAddress(Address address) {
-        Address = address;
+        this.address = address;
     }
 
     /**

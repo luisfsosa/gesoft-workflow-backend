@@ -33,8 +33,8 @@ public interface ActivityRepository extends JpaRepository<Activity, String> {
      */
     @Query(value= " SELECT gwa.id, gwa.name, gwa.description, gwa.activity_type as activityType, gwa.authorizer as authorizer, u.email as authorizerName, gwa.responsable as responsable, u2.email as responsableName,gwa.weighing, gwa.evidence_required as evidenceRequired, gwa.predecessor_activities as predecessorActivities, gwa.activity_order as activityOrder  " +
                   " FROM gwf_activity gwa " +
-                  " LEFT OUTER JOIN usuarios u on gwa.authorizer = u.id " +
-                  " LEFT OUTER JOIN usuarios u2 on gwa.responsable = u2.id " +
+                  " LEFT OUTER JOIN gwf_user u on gwa.authorizer = u.id " +
+                  " LEFT OUTER JOIN gwf_user u2 on gwa.responsable = u2.id " +
                   " WHERE gwa.template_id = :templateId " +
                   " AND gwa.cliente_id = :clientId " +
                   " ORDER BY gwa.activity_order ",
@@ -50,10 +50,10 @@ public interface ActivityRepository extends JpaRepository<Activity, String> {
      * @param projectId the project id
      * @return the list
      */
-    @Query(value= " SELECT gwa.id, gwa.name, gwa.description, gwa.activity_type as activityType, gwa.authorizer as authorizer, u.email as authorizerName, gwa.responsable as responsable, u2.email as responsableName,gwa.weighing, gwa.evidence_required as evidenceRequired,qwa.predecessor_activities as predecessorActivities, qwa.activity_order as activityOrder  " +
+    @Query(value= " SELECT gwa.id, gwa.name, gwa.description, gwa.activity_type as activityType, gwa.authorizer as authorizer, u.email as authorizerName, gwa.responsable as responsable, u2.email as responsableName,gwa.weighing, gwa.evidence_required as evidenceRequired,gwa.predecessor_activities as predecessorActivities, gwa.activity_order as activityOrder  " +
             " FROM gwf_activity gwa " +
-            " LEFT OUTER JOIN usuarios u on gwa.authorizer = u.id " +
-            " LEFT OUTER JOIN usuarios u2 on gwa.responsable = u2.id " +
+            " LEFT OUTER JOIN gwf_user u on gwa.authorizer = u.id " +
+            " LEFT OUTER JOIN gwf_user u2 on gwa.responsable = u2.id " +
             " WHERE gwa.project_id = :projectId " +
             " AND gwa.cliente_id = :clientId " +
             " ORDER BY gwa.activity_order ",
@@ -69,10 +69,10 @@ public interface ActivityRepository extends JpaRepository<Activity, String> {
      * @param projectExecutionId the project execution id
      * @return the list
      */
-    @Query(value= " SELECT gwa.id, gwa.name, gwa.description, gwa.status, gwa.weighing , qwa.activity_type as activityType, qwa.responsable as responsable, u.name as responsableName, qwa.authorizer as authorizer, u2.name as authorizerName, qwa.comments, qwa.attached, qwa.activity_advance as activityAdvance, qwa.evidence_required as evidenceRequired, qwa.activity_order as activityOrder, qwa.predecessor_activities as predecessorActivities " +
+    @Query(value= " SELECT gwa.id, gwa.name, gwa.description, gwa.status, gwa.weighing , gwa.activity_type as activityType, gwa.responsable as responsable, u.name as responsableName, gwa.authorizer as authorizer, u2.name as authorizerName, gwa.comments, gwa.attached, gwa.activity_advance as activityAdvance, gwa.evidence_required as evidenceRequired, gwa.activity_order as activityOrder, gwa.predecessor_activities as predecessorActivities " +
             " FROM gwf_activity gwa " +
-            " INNER JOIN usuarios u on gwa.responsable = u.id " +
-            " LEFT OUTER  JOIN usuarios u2 on gwa.authorizer = u2.id " +
+            " INNER JOIN gwf_user u on gwa.responsable = u.id " +
+            " LEFT OUTER  JOIN gwf_user u2 on gwa.authorizer = u2.id " +
             " WHERE gwa.project_execution_id = :projectExecutionId " +
             " AND gwa.cliente_id = :clientId " +
             " ORDER BY gwa.activity_order ",
@@ -87,10 +87,10 @@ public interface ActivityRepository extends JpaRepository<Activity, String> {
      * @param activityId the activity id
      * @return the activity dto
      */
-    @Query(value= " SELECT gwa.id, gwa.name, gwa.status, gwa.weighing , qwa.activity_type as activityType, qwa.responsable as responsable, u.name as responsableName, qwa.authorizer as authorizer, u2.nombre as authorizerName, qwa.comments, qwa.attached, qwa.activity_advance as activityAdvance, qwa.evidence_required as evidenceRequired, qwa.activity_order as activityOrder, qwa.predecessor_activities as predecessorActivities " +
+    @Query(value= " SELECT gwa.id, gwa.name, gwa.status, gwa.weighing , gwa.activity_type as activityType, gwa.responsable as responsable, u.name as responsableName, gwa.authorizer as authorizer, u2.name as authorizerName, gwa.comments, gwa.attached, gwa.activity_advance as activityAdvance, gwa.evidence_required as evidenceRequired, gwa.activity_order as activityOrder, gwa.predecessor_activities as predecessorActivities " +
             " FROM gwf_activity gwa " +
-            " INNER JOIN usuarios u on gwa.responsable = u.id " +
-            " LEFT OUTER  JOIN usuarios u2 on gwa.authorizer = u2.id " +
+            " INNER JOIN gwf_user u on gwa.responsable = u.id " +
+            " LEFT OUTER  JOIN gwf_user u2 on gwa.authorizer = u2.id " +
             " WHERE gwa.id = :activityId " +
             " AND gwa.cliente_id = :clientId " ,
             nativeQuery = true

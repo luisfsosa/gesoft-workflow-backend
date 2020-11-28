@@ -33,11 +33,11 @@ public interface ProjectExecutionRepository extends JpaRepository<ProjectExecuti
      * @return the list
      */
     @Query(
-            value=  " SELECT gwpe.id, gwpe.project_type_id as projectTypeId, gwpt.name as projectTypeName, gwpe.year as year, gwpe.period as period, gwpe.user_id as userId, u.email as userName, gwpe.name,  gwpe.gwf_client_id as gwfClientId, qwc.business_name as gwfClientName,gwpe.project_advance as projectAdvance,  gwpe.project_id as projectId,  gwpe.is_order as orderExecution  " +
+            value=  " SELECT gwpe.id, gwpe.project_type_id as projectTypeId, gwpt.name as projectTypeName, gwpe.year as year, gwpe.period as period, gwpe.user_id as userId, u.email as userName, gwpe.name,  gwpe.gwf_client_id as gwfClientId, gwc.business_name as gwfClientName,gwpe.project_advance as projectAdvance,  gwpe.project_id as projectId,  gwpe.is_order as orderExecution  " +
                     " FROM gwf_project_execution gwpe " +
                     " INNER JOIN gwf_project_type gwpt on gwpe.project_type_id = gwpt.id " +
-                    " INNER JOIN usuarios u on gwpe.user_id = u.id " +
-                    " INNER JOIN gwf_client gwc on qwpe.workflow_client_id = gwc.id " +
+                    " INNER JOIN gwf_user u on gwpe.user_id = u.id " +
+                    " INNER JOIN gwf_client gwc on gwpe.gwf_client_id = gwc.id " +
                     " WHERE gwpe.cliente_id = :clientId " +
                     " AND gwpe.project_type_id = :projectTypeId " +
                     " AND gwpe.year = :year " +
@@ -57,11 +57,11 @@ public interface ProjectExecutionRepository extends JpaRepository<ProjectExecuti
      * @return the list
      */
     @Query(
-            value=  " SELECT gwpe.id, gwpe.project_type_id as projectTypeId, gwpt.name as projectTypeName, gwpe.year as year, gwpe.period as period, gwpe.user_id as userId, u.email as userName, gwpe.name,  gwpe.gwf_client_id as gwfClientId, qwc.business_name as gwfClientName,gwpe.project_advance as projectAdvance,  gwpe.project_id as projectId,  gwpe.is_order as orderExecution  " +
+            value=  " SELECT gwpe.id, gwpe.project_type_id as projectTypeId, gwpt.name as projectTypeName, gwpe.year as year, gwpe.period as period, gwpe.user_id as userId, u.email as userName, gwpe.name,  gwpe.gwf_client_id as gwfClientId, gwc.business_name as gwfClientName,gwpe.project_advance as projectAdvance,  gwpe.project_id as projectId,  gwpe.is_order as orderExecution  " +
                     " FROM gwf_project_execution gwpe " +
                     " INNER JOIN gwf_project_type gwpt on gwpe.project_type_id = gwpt.id " +
-                    " INNER JOIN usuarios u on gwpe.user_id = u.id " +
-                    " INNER JOIN gwf_client gwc on qwpe.workflow_client_id = gwc.id " +
+                    " INNER JOIN gwf_user u on gwpe.user_id = u.id " +
+                    " INNER JOIN gwf_client gwc on gwpe.gwf_client_id = gwc.id " +
                     " WHERE gwpe.cliente_id = :clientId " +
                     " AND gwpe.project_type_id = :projectTypeId " +
                     " AND gwpe.year = :year " +

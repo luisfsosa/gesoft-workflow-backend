@@ -387,7 +387,13 @@ CREATE OR REPLACE VIEW gwf_vw_workflow AS
 			FROM gwf_activity qwa
 			WHERE project_execution_id = gwpe.id
 		) as ac
-		WHERE ac.id = 15) as comment15
+		WHERE ac.id = 15) as comment15,
+		(SELECT ac.attached FROM (
+			SELECT ROW_NUMBER() over (order by qwa.activity_order) as id, qwa.attached
+			FROM gwf_activity qwa
+			WHERE project_execution_id = gwpe.id
+		) as ac
+		WHERE ac.id = 15) as attached15
     FROM gwf_project_execution gwpe
          JOIN gwf_project_type gwpt ON gwpe.project_type_id = gwpt.id
          JOIN gwf_user u ON gwpe.user_id = u.id
